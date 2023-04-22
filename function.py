@@ -1,14 +1,15 @@
-import toyplot
+import matplotlib.pyplot as plt
+import networkx as nx
 
 def kmer_set(sequence, k, cyclic):
     
     kmers = set()
     
     if k > len(sequence):
-        print("Kmer length exceeds sequence length")
+        print("K-mer length exceeds sequence length")
         return kmers
     if k <= 1:
-        print("Kmer length cant be equal to 1")
+        print("K-mer length cant be equal to 1")
         return kmers
     
     for i in range(0, len(sequence)):
@@ -34,21 +35,30 @@ def edge_set(kmers):
                     edges.add((k2[:-1], k1[:-1]))
     return edges
 
-def plot_graph(edges, width=500, height=500):    
-    
+def plot_debruijn_graph(edges, width=500, height=500):
+    # Error handling
     if len(edges) == 0:
         print("No graph is formed")
-        return 
-    
-    graph = toyplot.graph(
-        [i[0] for i in edges],
-        [i[1] for i in edges],
-        width=width,
-        height=height,
-        tmarker=">", 
-        vsize=25,
-        vstyle={"stroke": "white", "stroke-width": 2, "fill": "none"},
-        vlstyle={"font-size": "11px", "stroke": "white"},
-        estyle={"stroke": "white", "stroke-width": 2},
-        layout=toyplot.layout.FruchtermanReingold(edges=toyplot.layout.CurvedEdges()))
-    return graph
+        return
+
+    G = nx.DiGraph()
+
+    for edge in edges:
+        G.add_edge(edge[0], edge[1])
+
+    fig, ax = plt.subplots(figsize=(width/80, height/80))
+    pos = nx.spring_layout(G, seed=42)
+
+    nx.draw_networkx_nodes(G, pos, node_size=25, node_color="none", edgecolors="none", linewidths=2, ax=ax)
+
+    nx.draw_networkx_edges(G, pos, edge_color="black", width=3, ax=ax, connectionstyle="arc3,rad=0.3")
+
+    nx.draw_networkx_labels(G, pos, font_color="red",labels={node: node for node in G.nodes()}, font_size=15, ax=ax)
+
+    ax.set_xlim([-1.2, 1.2])
+    ax.set_ylim([-1.2, 1.2])
+
+    ax.set_xticks([])
+    ax.set_yticks([])
+
+    plt.show()

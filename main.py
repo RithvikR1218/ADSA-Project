@@ -1,7 +1,7 @@
 import function
 edges = ""
 print("\n*********************************************")
-print("Genome Sequencing Software - De Brujin Graphs")
+print("Genome Assembling Software - De Brujin Graphs")
 print("*********************************************")
 
 while True:
@@ -21,10 +21,15 @@ while True:
         seq = input("Enter genome sequence : ")
 
         length = int(input("Enter length of k-mers : "))
-        
-        kmers = function.kmer_set(seq, length, True)
 
-        print("K-mers obtained successfully")
+        cycle = bool(input("Enter if genome is cyclic (true / false) : "))
+        
+        kmers = function.kmer_set(seq, length, cycle)
+
+        if len(kmers) != 0:
+            print("K-mers obtained successfully")
+        else:
+            continue
 
         w = int(input("Enter 1 to display k-mers, 0 to skip : "))
         if (w == 1):
@@ -50,7 +55,7 @@ while True:
             continue
 
         print("GRAPHING....")
-        function.plot_debruijn_graph(edges, width=500, height=500)
+        function.graph_plot(edges, width=500, height=500)
 
     elif (k == 3):
         print("Exiting......")

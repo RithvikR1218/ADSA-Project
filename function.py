@@ -6,10 +6,10 @@ def kmer_set(sequence, k, cyclic):
     kmers = set()
     
     if k > len(sequence):
-        print("K-mer length exceeds sequence length")
+        print("\nERROR: K-mer length exceeds sequence length")
         return kmers
     if k <= 1:
-        print("K-mer length cant be equal to 1")
+        print("\nERROR: K-mer length cant be less than or equal to 1")
         return kmers
     
     for i in range(0, len(sequence)):
@@ -35,11 +35,7 @@ def edge_set(kmers):
                     edges.add((k2[:-1], k1[:-1]))
     return edges
 
-def plot_debruijn_graph(edges, width=500, height=500):
-    # Error handling
-    if len(edges) == 0:
-        print("No graph is formed")
-        return
+def graph_plot(edges, width=500, height=500):
 
     G = nx.DiGraph()
 
